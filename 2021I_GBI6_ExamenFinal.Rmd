@@ -70,26 +70,27 @@ Para comprender la data de esta evaluación se requiere conocer el significado d
 
 - **dataset**: es el identificador del tipo de cancer del paciente. 
 
-- **resto de columnas**: nivees de expresión de los diferentes mRNA de los genes que están como nombre de columna (para este análisis se han seleccionado solamente 7 de ellos). 
+- **resto de columnas**: niveles de expresión de los diferentes mRNA de los genes que están como nombre de columna (para este análisis se han seleccionado solamente 7 de ellos). 
 
 # PREGUNTAS
 ## **Pregunta 1: MANIPULACIÓN DE DATOS [4 PUNTOS]**
 
 ### [0.5 PUNTOS] 1.1 Defina su directorio de trabajo. 
 ```{r wd}
-
+getwd()
 ```
 
 ### [0.5 PUNTOS] 1.2. Cargue la data "mRNA_expr.csv"
 ```{r data}
-df <- "cargue la data"
-
+df <- read.csv("data/mRNA_expr.csv")
 ```
 
 ### [1 PUNTO] 1.3 Cree una función de nombre ```long_df``` para transformar la data ```df``` de la forma wide a long.
 
 ```{r funcion_long}
-# Escriba aquí la función long_df
+#long_df <- 
+
+long_df <- pivot_longer(df, 2:9, names_to = ("dataset"), values_to = "expresion_level")
 
 
 ```
