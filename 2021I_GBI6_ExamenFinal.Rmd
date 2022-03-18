@@ -125,8 +125,9 @@ tabla_descriptiva2
 
 
 ```{tex}
+#Interpretacion de la tabla descriptiva
 #En la tabla descriptiva, cada uno de los resultados están clasificados de acuerdo al identificador del tipo de cáncer del paciente, denominado como dataset y el gen. 
-#En cada una de las tablas generadas se pueden observar datos estadisticos importantes como el tamaño de la muestra \emph{n}, media \emph{mean}, desviacion estandar \emph{sd}, mediana \emph{md}, entre otros. Dichos valores se obtuvieron con la información de los niveles de expresión de los diferentes mRNA de los genes. También de acuerdo a la información de las tablas, se observa que la tabla descriptiva con el mayor tamaño de muestra corresponde al dataset BRCA y el menor es KIRP.
+#En cada una de las tablas generadas se pueden observar datos estadisticos importantes como el tamaño de la muestra \emph{n}, media \emph{mean}, desviacion estandar \emph{sd}, mediana \emph{md}, entre otros. Dichos valores se obtuvieron con la información de los niveles de expresión de los diferentes mRNA de los genes. También de acuerdo a la información de las tablas, se observa que la tabla descriptiva con el mayor tamaño de muestra corresponde al dataset BRCA y el menor es KIRP. 
 
 ```
 
@@ -245,6 +246,8 @@ ggsave("results/regresion11.pdf",
 #Boxplot3.png, esta figura representa el nivel de expresion de cada gen, cada uno representado por una caja de bigotes, para el boxplot del primer gen ESR1, se observa que este diagrama es alto lo que sugiere que los niveles de expresion de ese gen difieren bastante. Por otra parte, el boxplot del gen FN1 es pequeño, se deduce que los datos de los niveles de expresión son muy cercanos. En el caso del boxplot de GAPDH es muy pequeño lo que igualmente podría indicar que los valores de expresión son mucho más cercanos entre sí. Para el boxplot de GATA3, también se deduce que los datos son cercanos; mientras que los boxplots de los genes MUC1, PTEN y XBP1, los graficos están entre altos y bajos, lo que sugiere que presentan diferencias entre los valores de expresion. 
 #De acuerdo a los centros de todos los boxplots, se puede considerar que los valores de los niveles de expresión son diferentes para cada gen.
 #Es importante destacar que los diagramas de caja son fundamentales para representar la asimetria de un conjunto de datos, en este caso, se considera que el boxplot del gen FN1 y mUC1, se rigen por una distribucion normal dado que la mediana está en el centro de la caja y los bigotes son casi iguales, es decir tiene una distribucion simetrica. Por otro lado, los boxplots del gen ESR1, GATA3, PTEN y XBP1, se deduce que tienen un sesgo negativo ya que cuando la mediana esta muy cerca de la parte superior de la caja y el bigote es pequeño tiene ese sesgo. Finalmente, el boxplot del gen GAPDH, se deduce que tiene sesgo positivo dado que la mediana esta cerca de la parte inferior de la caja. 
+
+#regresion11.pdf, en la grafica se puede observar el dataset que corresponde al identificador del tipo de cancer de los pacientes entre la comparacion del gen 1 y 2, es decir, GATA3 y PTEN, respectivamente, dicha nube de punto juntos a las regresiones, de forma que los puntos se distribuyen alrededor de la recta, de acuerdo a lo observado se podria deducir que siguen esta condicion, por tanto se diria que existe correlacion lineal. 
 
 ```
 
