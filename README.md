@@ -14,3 +14,5 @@
 
 ## Descripción de los datos, programas y librerías
   - mRNA_expr: Esta data contiene información sobre los niveles de expresión de mRNA de genes asociados a distintos tipos de cáncer, también presenta identificador de  cada tipo de cáncer, esta información se obtuvo de https://gdac.broadinstitute.org/
+  - Programas utilizados: Rstudio, git bash, github
+  - Librerías: tidyverse, dplyr, sjPlot, sjmisc, ggplot2
