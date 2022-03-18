@@ -88,11 +88,11 @@ df <- read.csv("data/mRNA_expr.csv")
 ### [1 PUNTO] 1.3 Cree una función de nombre ```long_df``` para transformar la data ```df``` de la forma wide a long.
 
 ```{r funcion_long}
-#long_df <- 
-
-long_df <- pivot_longer(df, 2:9, names_to = ("dataset"), values_to = "expresion_level")
-
-
+long_df <- 
+long_df <- function(df){
+  newfuncion <- pivot_longer(df, 3:9, names_to = "gen", 
+                            values_to = "expresion_level")
+  return(newfuncion)}
 ```
 
 
@@ -100,20 +100,33 @@ long_df <- pivot_longer(df, 2:9, names_to = ("dataset"), values_to = "expresion_
 La tabla resultante tendrá tres columnas: ```dataset, gen, expresion_level```.  
 ```{r df_long}
 # Genere la data df_long 
-
+data_long_new = long_df(df)[ , 2:4]
+df_long <- data.frame(data_long_new)
 ```
 
 ### [0.5 PUNTOS] 1.5 A partir de la data ```df_long```, genere un **Descriptive table** (librería ```sjPlot```) y guárdelo en el subdirectorio "result"  con el nombre **mRNA_expr_summary.doc** (previamente debe seleccionar las celdas adecuadas con funciones de la librería ```dplyr``` en conjunto con el operador ```%>%```). 
 ```{r desc_table}
 # Escriba el código para crear el Descriptive table 
+#install.packages("sjPlot") #Instalar paquete faltante
+library(dplyr)
+library(sjPlot)
+library(sjmisc)
 
+tabla_descriptiva1 <- df_long %>% group_by(dataset,
+                                           gen)
+                                    
+tabla_descriptiva2 <- descr(x=tabla_descriptiva1, 
+                              out="browser",
+                              file="results/mRNA_expr_summary.doc")
+tabla_descriptiva2
 ```
 
 ### [0.5 PUNTOS] 1.6 Interprete los resultados de la tabla resultante de la sección 1.5. 
 
 
 ```{tex}
-# Escriba aquí su interpretación 
+#En la tabla descriptiva, cada uno de los resultados están clasificados de acuerdo al identificador del tipo de cáncer del paciente, denominado como dataset y el gen. 
+#En cada una de las tablas generadas se pueden observar datos estadisticos importantes como el tamaño de la muestra \emph{n}, media \emph{mean}, desviacion estandar \emph{sd}, mediana \emph{md}, entre otros. Dichos valores se obtuvieron con la información de los niveles de expresión de los diferentes mRNA de los genes. También de acuerdo a la información de las tablas, se observa que la tabla descriptiva con el mayor tamaño de muestra corresponde al dataset BRCA y el menor es KIRP.
 
 ```
 
@@ -127,22 +140,39 @@ Para esta pregunta tiene que utilizar la data ```df_long```.
 
 ```{r}
 # Escriba el código para crear la función tcga_boxplots
-
-
+#library(tidyverse)
+library(ggplot2)
+tcga_boxplots <- function(data){
+  boxplots <- df_long %>% 
+              filter (dataset == data) %>% 
+              ggplot(aes(x=gen,
+                         y=expresion_level, 
+                         color = gen)) +
+              geom_boxplot(size=0.5) + 
+              geom_jitter (size=1)
+}
 ```
 
 ### [0.5 PUNTOS] 2.2 Utilizando la función ```lapply()``` genera la lista ```cancertype_boxplots``` con las gráficas para cada tipo de cancer (cada tipo de dataset). 
 ```{r list_boxplots}
 # Escriba el código para generar la lista. 
+cancertype_boxplots_uniques <- unique(df_long$dataset)
 
+
+cancertype_boxplots <- lapply(cancertype_boxplots_uniques, 
+                              tcga_boxplots)
 
 ```
 
 ### [0.5 PUNTOS] 2.3 Guarde en el subdirectorio ```result``` el tercer plot de la lista ```cancertype_boxplots``` con el nombre ```boxplot3.png```. La definición de a figura debe ser de 300dpi. 
 ```{r boxplot3}
 # Escriba el código para guardar la tercera figura de la lista. 
+#Tercer plot de la lista cancertype_boxplots
+cancertype_boxplots_valor <- cancertype_boxplots[[3]]
 
-
+ggsave("results/boxplot3.png",
+        dpi = 300,
+        limitsize = TRUE)
 ```
 
 
@@ -151,6 +181,33 @@ Para esta pregunta tiene que utilizar la data ```df_long```.
 ```{r reg_gen_exp}
 # Escriba aquí su función reg_gen_expression
 
+reg_gen_expression <- function(cancertype_boxplots_valor){
+ 
+  gen1 = cancertype_boxplots_valor[1]
+  gen2 = cancertype_boxplots_valor[2]
+  
+  
+  filtro_1 <- df_long %>%
+              filter (gen == gen1) 
+  filtro_2 <- df_long %>% 
+              filter (gen == gen2) 
+  
+  
+  datanewgenes <- cbind(filtro_1,
+                        filtro_2)
+  
+  
+  reg_genplots_geom_point <- tibble("dataset" = datanewgenes[,1],
+                                    "gen1" = datanewgenes[,3],
+                                    "gen2" = datanewgenes[,6]) %>%
+                               ggplot(aes(x = gen1, 
+                                         y = gen2, 
+                                         color = dataset)) + 
+                              geom_point(size = 2) + 
+                              geom_smooth(method = lm, 
+                                          formula = y~x, 
+                                          se = FALSE)
+}
 
 ```
 
@@ -158,23 +215,38 @@ Para esta pregunta tiene que utilizar la data ```df_long```.
 ### [0.5 PUNTOS] 2.5. Utilizando la función ```lapply()``` genera la lista ```reg_genplots``` con las gráficas para cada par de genes posibles. Recuerde que tiene 7 tipos de genes, se debe tener todas las combinaciones posibles por pares de genes (combinatoria sin repetición).
 ```{r list_regplots}
 # Escriba el código para generar la lista. 
+genunique <- unique(df_long$gen)
 
+
+genes_uniques <- combn(genunique,  
+                            m=2,        
+                            simplify = FALSE)
+
+#lista reg_genplots
+reg_genplots <- lapply(genes_uniques,
+                       reg_gen_expression)
 ```
 
 
 ### [0.5 PUNTOS] 2.6. Guarde en el subdirectorio ```result``` el onceavo plot de la lista ```reg_genplots``` con el nombre ```regresion11.pdf```. La definición de a figura debe ser de 300dpi. 
 ```{r reg11}
 # Escriba el código para guardar el onceavo plot. 
+reg_genplots_valor <- reg_genplots[[11]]
 
+ggsave("results/regresion11.pdf",
+       dpi = 300,
+       limitsize = TRUE)
 ```
 
 
 ### [1 PUNTO] 2.7. Interprete los resultados de las figuras ```boxplot3.png``` y ```regresion11.pdf```.
 
 ```{tex}
-# Esciba aquí su intepretación
+#Boxplot3.png, esta figura representa el nivel de expresion de cada gen, cada uno representado por una caja de bigotes, para el boxplot del primer gen ESR1, se observa que este diagrama es alto lo que sugiere que los niveles de expresion de ese gen difieren bastante. Por otra parte, el boxplot del gen FN1 es pequeño, se deduce que los datos de los niveles de expresión son muy cercanos. En el caso del boxplot de GAPDH es muy pequeño lo que igualmente podría indicar que los valores de expresión son mucho más cercanos entre sí. Para el boxplot de GATA3, también se deduce que los datos son cercanos; mientras que los boxplots de los genes MUC1, PTEN y XBP1, los graficos están entre altos y bajos, lo que sugiere que presentan diferencias entre los valores de expresion. 
+#De acuerdo a los centros de todos los boxplots, se puede considerar que los valores de los niveles de expresión son diferentes para cada gen.
+#Es importante destacar que los diagramas de caja son fundamentales para representar la asimetria de un conjunto de datos, en este caso, se considera que el boxplot del gen FN1 y mUC1, se rigen por una distribucion normal dado que la mediana está en el centro de la caja y los bigotes son casi iguales, es decir tiene una distribucion simetrica. Por otro lado, los boxplots del gen ESR1, GATA3, PTEN y XBP1, se deduce que tienen un sesgo negativo ya que cuando la mediana esta muy cerca de la parte superior de la caja y el bigote es pequeño tiene ese sesgo. Finalmente, el boxplot del gen GAPDH, se deduce que tiene sesgo positivo dado que la mediana esta cerca de la parte inferior de la caja. 
 
 ```
 
-## 3. CONTROL DE LA VERSIÓN [1 PUNTO]. Se verficará en ell repositorio de GitHub. 
+## 3. CONTROL DE LA VERSIÓN [1 PUNTO]. Se verficará en el repositorio de GitHub. 
 
