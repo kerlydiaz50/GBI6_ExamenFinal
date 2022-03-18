@@ -14,8 +14,6 @@ output:
       smooth_scroll: yes
 ---
 
-![](./img/ikiam.png)
-
 **Bienvenidos al examen final de GBI6 - Bioinformática.**
 
 # CONTENIDO DE LA EVALUACIÓN
@@ -100,6 +98,7 @@ long_df <- function(df){
 La tabla resultante tendrá tres columnas: ```dataset, gen, expresion_level```.  
 ```{r df_long}
 # Genere la data df_long 
+library(tidyverse)
 data_long_new = long_df(df)[ , 2:4]
 df_long <- data.frame(data_long_new)
 ```
@@ -141,7 +140,7 @@ Para esta pregunta tiene que utilizar la data ```df_long```.
 
 ```{r}
 # Escriba el código para crear la función tcga_boxplots
-#library(tidyverse)
+library(tidyverse)
 library(ggplot2)
 tcga_boxplots <- function(data){
   boxplots <- df_long %>% 
