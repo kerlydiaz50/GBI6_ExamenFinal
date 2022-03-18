@@ -13,3 +13,4 @@
   - Tipo de sistema: Sistema operativo de 64 bits, procesador basado en x64
 
 ## Descripción de los datos, programas y librerías
+  - mRNA_expr: Esta data contiene información sobre los niveles de expresión de mRNA de genes asociados a distintos tipos de cáncer, también presenta identificador de  cada tipo de cáncer, esta información se obtuvo de https://gdac.broadinstitute.org/
